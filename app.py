@@ -12,11 +12,15 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('home_page.html')
 
-@app.route('/examples')
+@app.route('/api')
+def api():
+    return render_template('about_api.html')
+
+@app.route('/docs')
 def examples():
-    return render_template('examples.html')
+    return render_template('docs.html')
 
 @app.route('/graph', methods=['GET'])
 def graph3():
@@ -254,7 +258,7 @@ def flat_Graph():
 #if __name__ == '__main__':
 #    app.run(host='localhost', port=8080)
 
-#heroku
+heroku
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True)
 
