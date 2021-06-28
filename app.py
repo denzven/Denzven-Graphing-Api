@@ -18,6 +18,10 @@ def home():
 def api():
     return render_template('about_api.html')
 
+@app.route('/rickroll')
+def api():
+    return render_template('rickroll.html')
+
 @app.route('/docs')
 def examples():
     return render_template('docs.html')
@@ -120,7 +124,7 @@ def reset():
         return 'done'
 
 
-@app.route('/rickroll')
+@app.route('/rickroll_2')
 def rickroll():
     return redirect("https://youtu.be/dQw4w9WgXcQ")
 
