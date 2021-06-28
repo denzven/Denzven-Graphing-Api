@@ -19,8 +19,8 @@ def api():
     return render_template('about_api.html')
 
 @app.route('/rickroll')
-def api():
-    return render_template('rickroll.html')
+def rickroll():
+    return render_template('rickroll_pg.html')
 
 @app.route('/docs')
 def examples():
@@ -125,7 +125,7 @@ def reset():
 
 
 @app.route('/rickroll_2')
-def rickroll():
+def rickroll_2():
     return redirect("https://youtu.be/dQw4w9WgXcQ")
 
 @app.route('/DenzGraphingApi/v1/flat_graph/test/plot', methods=['GET'])
