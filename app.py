@@ -225,7 +225,7 @@ def flat_Graph():
         X, Y = np.meshgrid(xlist, ylist)
         fig, ax = plt.subplots()
         F = eval(formula)
-        ax.contour(X, Y, F, [0])
+        ax.contour(X, Y, F, [0],colors='#4c82ca')
         try:
             if grid_value is None:
                 plt.minorticks_off()
