@@ -1,5 +1,5 @@
 #from flask import Flask, jsonify, request, send_file,render_template,redirect
-from flask import *
+from quart import *
 import matplotlib
 matplotlib.use("agg")
 import numpy as np
@@ -7,27 +7,27 @@ import matplotlib.pyplot as plt
 import os
 import traceback
 
-app = Flask(__name__)
+app = Quart(__name__)
 
 
 @app.route('/')
-def home():
-    return render_template('home_page.html')
+async def home():
+    return await render_template('home_page.html')
 
 @app.route('/api')
-def api():
-    return render_template('about_api.html')
+async def api():
+    return await render_template('about_api.html')
 
 @app.route('/rickroll')
-def rickroll():
-    return render_template('rickroll_pg.html')
+async def rickroll():
+    return await render_template('rickroll_pg.html')
 
 @app.route('/docs')
-def examples():
-    return render_template('docs.html')
+async def examples():
+    return await render_template('docs.html')
 
 @app.route('/graph', methods=['GET'])
-def graph3():
+async def graph3():
     formula_og = request.args.get('formula')
     contour_level = request.args.get('contour_level')
     plt.style.use('dark_background')
@@ -61,11 +61,11 @@ def graph3():
             pass
         else:
             print('not passable')
-            #return 'not passable due to not supported characters in formula.. if your formula has a + (plus sign) please replace it with %2B'
-            return(traceback.format_exc())
+            #return await 'not passable due to not supported characters in formula.. if your formula has a + (plus sign) please replace it with %2B'
+            return await(traceback.format_exc())
     except Exception as e:
-        #return(traceback.format_exc())
-        return(e)
+        #return await(traceback.format_exc())
+        return await(e)
     F = eval(formula)
     print(f"{formula_og} {formula}")
     # fig, ax = plt.subplots(
@@ -94,10 +94,10 @@ def graph3():
     plt.savefig('plot3.png', bbox_inches='tight', dpi=150)
     filename = 'plot3.png'
     plt.close()
-    return send_file(filename)
+    return await send_file(filename)
 
 @app.route('/2d_polar/graph', methods=['GET'])
-def polar_graph():
+async def polar_graph():
     a = request.args.get('a')
     n = request.args.get('n')
     plt.style.use('dark_background')
@@ -113,23 +113,23 @@ def polar_graph():
     plt.savefig('polar_plot.png', bbox_inches='tight', dpi=150)
     filename = 'polar_plot.png'
     plt.close()
-    return send_file(filename)
+    return await send_file(filename)
 
 
 @app.route('/reset', methods=['GET'])
-def reset():
+async def reset():
     passwd = request.args.get('passwd')
     if passwd == 'passwd':
         plt.close('all')
-        return 'done'
+        return await 'done'
 
 
 @app.route('/rickroll_2')
-def rickroll_2():
-    return redirect("https://youtu.be/dQw4w9WgXcQ")
+async def rickroll_2():
+    return await redirect("https://youtu.be/dQw4w9WgXcQ")
 
 @app.route('/DenzGraphingApi/v1/flat_graph/test/plot', methods=['GET'])
-def flat_Graph():
+async def flat_Graph():
     #https: // denzven.pythonanywhere.com / DenzGraphingApi / v1 / 2dGraph / plot?formula = < formula > & grid = true & plot_style = dark & x_coord = 10 & y_coord = 10
     formula_og_input = request.args.get('formula')
     grid_value = request.args.get('grid')
@@ -149,10 +149,10 @@ def flat_Graph():
     try:
         try:
             if formula_og_input is None:
-                return 'formula not provided'
+                return await 'formula not provided'
         except Exception as e:
             print('if formula_og_input is None:')
-            return e
+            return await e
         try:
             formula_og_input = str(formula_og_input.upper())
             formula = formula_og_input.replace('x', 'X')
@@ -176,13 +176,13 @@ def flat_Graph():
             #     pass
             # else:
             #     print('not passable')
-            #     return traceback.format_exc()
+            #     return await traceback.format_exc()
             print(formula_og_input)
             print(formula)
             print(grid_value)
         except Exception as e:
             print('replacement error')
-            return f'couldnt parse this formula {formula}'
+            return await f'couldnt parse this formula {formula}'
         try:
             if plot_style is None:
                 plt.style.use('dark_background')
@@ -192,11 +192,11 @@ def flat_Graph():
                 try:
                     plot_style = (plot_style_list[plot_style_choice])
                 except:
-                    return f'couldnt use this style {plot_style}'
+                    return await f'couldnt use this style {plot_style}'
                 plt.style.use(str(plot_style))
                 pass
         except Exception as e:
-            return e
+            return await e
 
         try:
             if x_coord is None:
@@ -208,7 +208,7 @@ def flat_Graph():
                 xlist = np.linspace(neg_x_coord, x_coord, num=1000)
                 pass
         except Exception as e:
-            return e
+            return await e
 
         try:
             if y_coord is None:
@@ -220,7 +220,7 @@ def flat_Graph():
                 ylist = np.linspace(neg_y_coord, y_coord, num=1000)
                 pass
         except Exception as e:
-            return e
+            return await e
 
         X, Y = np.meshgrid(xlist, ylist)
         fig, ax = plt.subplots()
@@ -240,13 +240,13 @@ def flat_Graph():
                 print('grid is not none')
                 pass
         except Exception as e:
-            return e
+            return await e
         ax.set_aspect('equal')
         plt.title(f"graphical representation of {formula_og_input} = 0", color='w', pad=20, fontsize='small')
-        fig.savefig('D:\\DenzGraphingApi\\plot_test.png', bbox_inches='tight', dpi=150)
-        filename = 'D:\\DenzGraphingApi\\plot_test.png'
+        fig.savefig('D:\\Denzven-Graphing-Api\\plot_test.png', bbox_inches='tight', dpi=150)
+        filename = 'D:\\Denzven-Graphing-Api\\plot_test.png'
         plt.close(fig)
-        return send_file(filename)
+        return await send_file(filename)
 
     except Exception as e:
         return f'couldn\'t parse this formula \'{formula}\''
@@ -259,10 +259,10 @@ def flat_Graph():
 #    app.run()
 
 #local
-#if __name__ == '__main__':
-#    app.run(host='localhost', port=8080)
+if __name__ == '__main__':
+    app.run(host='localhost', port=8080)
 
 #heroku
-if __name__ == '__main__':
-    app.run(debug=True, use_reloader=True)
+#if __name__ == '__main__':
+#    app.run(debug=True, use_reloader=True)
 
