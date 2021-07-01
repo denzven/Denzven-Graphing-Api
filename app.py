@@ -26,6 +26,10 @@ def rickroll():
 def examples():
     return render_template('docs.html')
 
+@app.route('/sitemap')
+def sitemap():
+    return sitemap.xml
+
 @app.route('/graph', methods=['GET'])
 def graph3():
     formula_og = request.args.get('formula')
