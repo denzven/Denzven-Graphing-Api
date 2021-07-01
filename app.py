@@ -26,9 +26,10 @@ def rickroll():
 def examples():
     return render_template('docs.html')
 
-@app.route('/sitemap')
-def sitemap():
-    return sitemap.xml
+#@app.route('/robots.txt')
+@app.route('/sitemap.xml')
+def static_from_root():
+    return send_from_directory(app.static_folder, request.path[1:])
 
 @app.route('/graph', methods=['GET'])
 def graph3():
