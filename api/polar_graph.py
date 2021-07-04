@@ -104,9 +104,9 @@ def flat_graph():
         except Exception as e:
             return e
         plt.title(f"graphical representation of {formula_og_input} = 0", color='w', pad=20, fontsize='small')
-        fig.savefig('/polar_plot_test.png', bbox_inches='tight', dpi=150)
+        fig.savefig('polar_plot_test.png', bbox_inches='tight', dpi=150)
         print('hmmm?')
-        filename = '/polar_plot_test.png'
+        filename = 'polar_plot_test.png'
         print(filename)
         plt.close(fig)
         return send_file(filename)
