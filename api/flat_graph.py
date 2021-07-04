@@ -123,9 +123,9 @@ def flat_graph():
             return e
         ax.set_aspect('equal')
         plt.title(f"graphical representation of {formula_og_input} = 0", color='w', pad=20, fontsize='small')
-        fig.savefig('/plot_test.png', bbox_inches='tight', dpi=150)
+        fig.savefig('plot_test.png', bbox_inches='tight', dpi=150)
         print('hmmm?')
-        filename = '/plot_test.png'
+        filename = 'plot_test.png'
         print(filename)
         plt.close(fig)
         return send_file(filename)
