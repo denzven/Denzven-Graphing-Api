@@ -10,7 +10,6 @@ flat_graph_runner = Blueprint('flat_graph_runner', __name__)
 
 @flat_graph_runner.route('/DenzGraphingApi/v1/flat_graph/test/plot', methods=['GET'])
 def flat_graph():
-    #https: // denzven.pythonanywhere.com / DenzGraphingApi / v1 / 2dGraph / plot?formula = < formula > & grid = true & plot_style = dark & x_coord = 10 & y_coord = 10
     formula_og_input = request.args.get('formula')
     grid_value = request.args.get('grid')
     plot_style = request.args.get('plot_style')
@@ -21,11 +20,6 @@ def flat_graph():
                        'seaborn-dark', 'seaborn-dark-palette','seaborn-darkgrid', 'seaborn-deep', 'seaborn-muted',
                        'seaborn-notebook', 'seaborn-paper', 'seaborn-pastel','seaborn-poster', 'seaborn-talk',
                        'seaborn-ticks', 'seaborn-white', 'seaborn-whitegrid', 'tableau-colorblind10']
-    #print('formula_og_input:  ' + formula_og_input)
-    #print('grid:  ' + grid)
-    #print('plot_style:  ' + plot_style)
-    #print('x_coord:  ' + x_coord)
-    #print('y_coord:  ' + y_coord)
     try:
         try:
             if formula_og_input is None:
@@ -45,18 +39,9 @@ def flat_graph():
             formula = formula.replace('SQRT', 'np.sqrt')
             formula = formula.replace('π', 'np.pi')
             formula = formula.replace('PI', 'np.pi')
-            # chars = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
-            #         's', 'i', 'n', 'c', 'o', 't', 'a', 'n', 'r', 'e',
-            #         '√', 'π', '%', '/', '.', '!', '^', '(', ')', '*', '-', '**', '+', '=',
-            #         'x', 'y']
-            # char_check = ((c in chars) for c in formula_og_input)
-            # char_check_final = all(char_check)
-            # if char_check_final:
-            #     print('passable')
-            #     pass
-            # else:
-            #     print('not passable')
-            #     return traceback.format_exc()
+            formula = formula.replace('ABS', 'np.absolute')
+            formula = formula.replace('MIN', 'np.min')
+            formula = formula.replace('MAX', 'np.max')
             print(formula_og_input)
             print(formula)
             print(grid_value)
