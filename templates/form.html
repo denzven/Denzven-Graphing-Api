@@ -1,0 +1,38 @@
+ 
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <title>Hello, world!</title>
+
+  <meta charset="UTF-8" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <meta name="description" content="" />
+
+</head>
+<script>
+function getImg()
+{   
+    var inputs = document.myform;
+    for(var i = 0; i < inputs.length; i++) {
+        inputs[i].disabled = false;
+    }
+}
+</script>
+<body>
+<form action="/DenzGraphingApi/v1/flat_graph/test/plot">
+  <label for="fname">Formula:</label><br>
+  <input type="text" id="formula" name="formula" value="x+y" required><br>
+  <input type="submit" value="Submit">
+</form>  
+<a href='#' onclick='getImg()'><img src="" id="edit-save"/></a>
+<img src="/DenzGraphingApi/v1/flat_graph/test/plot?formula=x**2-y" >
+  <h1>Hello, world!</h1>
+
+</body>
+
+</html>
