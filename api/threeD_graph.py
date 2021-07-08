@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import traceback
+from mpl_toolkits.mplot3d import Axes3D
 
 # Adding a blueprint to start the graph function
 threeD_graph_runner = Blueprint('threeD_graph_runner', __name__)
