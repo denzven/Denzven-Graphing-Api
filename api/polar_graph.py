@@ -41,6 +41,7 @@ def polar_graph(): # The Funtion
     print('\n\n\n')
     print(f'+========================================+')
     print(f'|                                         ')
+    print(f'|       Graph_Type : PolarGraph           ')
     print(f'| formula_og_input : {formula_og_input}   ')
     print(f'|       grid_value : {grid_value}         ')
     print(f'|       plot_style : {plot_style}         ')
