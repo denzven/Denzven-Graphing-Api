@@ -2,3 +2,4 @@ Flask
 gunicorn
 matplotlib
 numpy
+mpl_toolkits

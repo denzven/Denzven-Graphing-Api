@@ -28,8 +28,8 @@ def polar_graph(): # The Funtion
     grid_lines_major = request.args.get('grid_lines_major')
     grid_lines_minor = request.args.get('grid_lines_minor')
     tick_colors      = request.args.get('tick_colors')
-    axfacecolor        = request.args.get('axfacecolor')
-    figfacecolor        = request.args.get('figfacecolor')
+    axfacecolor      = request.args.get('axfacecolor')
+    figfacecolor     = request.args.get('figfacecolor')
     title_text       = request.args.get('title_text')
     plot_style_list  = ['Solarize_Light2', '_classic_test_patch', 'bmh', 'classic', 'dark_background', 'fast',
                        'fivethirtyeight', 'ggplot','grayscale', 'seaborn', 'seaborn-bright', 'seaborn-colorblind',
@@ -66,9 +66,17 @@ def polar_graph(): # The Funtion
 
         try: # Checking for Formula
             if formula_og_input is None:
-                return 'formula not provided'
+                return jsonify(
+                    error = 'formula input is not provided', 
+                    error_id = 'ERROR_NO_FORMULA_INPUT_TRY_BLOCK',
+                    fix = 'Do not leave the Formula parameter empty'
+                    )
         except Exception as e:
-            return str(e)
+            return jsonify(
+                error = str(e), 
+                error_id = 'ERROR_FORMULA_INPUT_TRY_BLOCK',
+                fix = 'check your formula input again'
+                )
 
         #---
 
@@ -94,7 +102,11 @@ def polar_graph(): # The Funtion
             formula = formula.replace('CEIL', 'np.ceil')
             formula = formula.replace('ROUND', 'np.ceil')
         except Exception as e:
-            return str(e)
+            return jsonify(
+                error = str(e), 
+                error_id = 'ERROR_FORMULA_REPLACE_TRY_BLOCK',
+                fix = 'Please check your formula again, it contains unsupported characters'
+                )
 
         #---
 
@@ -111,7 +123,11 @@ def polar_graph(): # The Funtion
                 plt.style.use(str(plot_style))
                 pass
         except Exception as e:
-            return str(e)
+            return jsonify(
+                error = str(e), 
+                error_id = 'ERROR_PLOT_STYLE_TRY_BLOCK',
+                fix = 'change your plot_style to a valid number (between 0-25)'
+                )
             
         #---
 
@@ -125,7 +141,11 @@ def polar_graph(): # The Funtion
                 xlist = np.linspace(neg_x_coord, x_coord, num=1000)
                 pass
         except Exception as e:
-            return str(e)
+            return jsonify(
+                error = str(e), 
+                error_id = 'ERROR_X_COORD_TRY_BLOCK',
+                fix = 'x_coord must be a number'
+                )
             
         #---
 
@@ -139,17 +159,25 @@ def polar_graph(): # The Funtion
                 ylist = np.linspace(neg_y_coord, y_coord, num=1000)
                 pass
         except Exception as e:
-            return str(e)
+            return jsonify(
+                error = str(e), 
+                error_id = 'ERROR_Y_COORD_TRY_BLOCK',
+                fix = 'y_coord must be a number'
+                )
             
         #---
 
         try: # Core funtion of actually getting the numbers
             X, Y = np.meshgrid(xlist, ylist)
-            fig, ax = plt.subplots(subplot_kw=dict(projection='polar')) # Setting the Projection to 'polar'
+            fig, ax = plt.subplots(subplot_kw=dict(projection='polar')) # Setting the Projection to '3d'
             F = eval(formula) # The most Dangerous Eval... DO NOT USE THIS... it jus works for this case
             pass
         except Exception as e:
-            return str(e)
+            return jsonify(
+                error = str(e), 
+                error_id = 'ERROR_MAIN_EVAL_TRY_BLOCK',
+                fix = 'Check the formula input again,\n (PS: 2x has to be written as 2*x, please read the docs for further info: \n https://denzven.pythonanywhere.com/docs)'
+                )
             
         #---
 
@@ -161,7 +189,11 @@ def polar_graph(): # The Funtion
                 ax.contour(X, Y, F, [0],colors=f"#{line_style}")
                 pass
         except Exception as e:
-            return str(e)
+            return jsonify(
+                error = str(e), 
+                error_id = 'ERROR_LINE_STYLE_TRY_BLOCK',
+                fix = 'check the line_style input it has to be a valid hex color withour #'
+                )
             
         #---
 
@@ -184,12 +216,16 @@ def polar_graph(): # The Funtion
                 plt.grid(b=True, which='minor', color=f"#{grid_lines_minor}", linestyle='-', alpha=0.2)
                 pass           
         except Exception as e:
-            return str(e)
+            return jsonify(
+                error = str(e), 
+                error_id = 'ERROR_GRID_VALUE_TRY_BLOCK',
+                fix = 'check the grid input it has to be 1,2 or 3'
+                )
             
         #---
 
-        # No Spines in Polar 
-
+        # No spines in Polar
+            
         #---
 
         try: #setting up tick_colors
@@ -200,7 +236,12 @@ def polar_graph(): # The Funtion
                 ax.tick_params(colors=f"#{tick_colors}", which='both')
                 pass
         except Exception as e:
-            return str(e)
+            return jsonify(
+                error = str(e),
+                error_id = 'ERROR_TICK_COLORS_TRY_BLOCK',
+                fix = 'check the tick_colors input it has to be a valid hex color withour #'
+                )
+
             
         #---
 
@@ -211,7 +252,12 @@ def polar_graph(): # The Funtion
                 ax.set_facecolor(f'#{axfacecolor}')
                 pass
         except Exception as e:
-            return str(e)
+            return jsonify(
+                error = str(e),
+                error_id = 'ERROR_AX_FACECOLOR_TRY_BLOCK',
+                fix = 'check the axfacecolor input it has to be a valid hex color withour #'
+                ) 
+
             
         #---
 
@@ -222,11 +268,15 @@ def polar_graph(): # The Funtion
                 fig.set_facecolor(f'#{figfacecolor}')
                 pass
         except Exception as e:
-            return str(e)
+            return jsonify(
+                error = str(e),
+                error_id = 'ERROR_FIG_FACECOLOR_TRY_BLOCK',
+                fix = 'check the figfacecolor input it has to be a valid hex color withour #'
+                )
             
         #---
 
-        try: #setting up facecolors
+        try: #setting up title
             if title_text is None:
                 plt.title(f"graphical representation of {formula_og_input} = 0", color='#ffffff', pad=20, fontsize='small')
                 pass
@@ -234,7 +284,11 @@ def polar_graph(): # The Funtion
                 plt.title(f"{title_text}", color='#ffffff', pad=20, fontsize='small')
                 pass
         except Exception as e:
-            return str(e)
+                return jsonify(
+                    error = str(e), 
+                    error_id = 'ERROR_TITLE_TEXT_TRY_BLOCK',
+                    fix = 'the title contains invalid characters please recheck the title'
+                    )
             
         #---
 
@@ -245,9 +299,9 @@ def polar_graph(): # The Funtion
             plt.close(fig)
             return send_file(filename)
         except Exception as e:
-            return str(e)
+                return jsonify(error = str(e) , error_id = 'ERROR_SAVE_FIG_TRY_BLOCK') 
     except Exception as e:
-        return str(e)
+        return jsonify(error = str(e) , error_id = 'ERROR_MAIN_TRY_BLOCK') 
 
 # Hope you loved this. feel free to try out and explore this Api at:
 # https://denzven.pythonanywhere.com/
