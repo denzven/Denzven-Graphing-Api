@@ -101,6 +101,7 @@ def flat_graph(): # The Funtion
             formula = formula.replace('FLOOR', 'np.floor')
             formula = formula.replace('CEIL', 'np.ceil')
             formula = formula.replace('ROUND', 'np.ceil')
+            formula = formula.replace(')(', ')*(')
         except Exception as e:
             return jsonify(
                 error = str(e), 
