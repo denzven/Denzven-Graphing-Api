@@ -9,6 +9,8 @@ Api_BASEURL = "http://denzven.pythonanywhere.com/"
 print("testing api speed")
 print("10 formulas")
 
+session = aiohttp.ClientSession()
+
 async def test():
     sample_json = {
         "../test/file1.png": "x-y",
@@ -24,14 +26,13 @@ async def test():
     }
 
     for file in sample_json:
-        async with aiohttp.ClientSession() as session:
-            formula_output = urllib.parse.quote(sample_json[file], safe='')
-            url = Api_BASEURL + f'/DenzGraphingApi/v1/flat_graph/test/plot?formula={formula_output}'
-            async with session.get(url) as r:
-                file_ = open(file, "wb")
-                file_.write(await r.read())
-                file_.close()
-                print(f"Done => {formula_output}")
+        formula_output = urllib.parse.quote(sample_json[file], safe='')
+        url = Api_BASEURL + f'/DenzGraphingApi/v1/flat_graph/test/plot?formula={formula_output}'
+        async with session.get(url) as r:
+            file_ = open(file, "wb")
+            file_.write(await r.read())
+            file_.close()
+            print(f"Done => {formula_output}")
 
 def test_prof():
     import cProfile
