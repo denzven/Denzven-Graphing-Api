@@ -33,6 +33,31 @@ def api():
 def examples():
     return render_template('docs.html')
 
+# Sub-pages for the "api docs" page in website in /templates
+@app.route('/DenzGraphingApi/v1/attr')
+def attr():
+    attr = {
+  "grid=<1|2|3>": "Adds grids to the graph",
+  "plot_style=<0-25>": "Determines the plot_style (boring)",
+  "x_coord=<any>": "Fixes the value of the x_coord",
+  "y_coord=<any>": "Fixes the value of the y_coord",
+  "spine_top=<hex>": "Top-spine color",
+  "spine_bottom=<hex>": "Bottom-spine color",
+  "spine_left=<hex>": "Left-spine color",
+  "spine_right=<hex>": "Right-spine color",
+  "line_style=<hex>": "Change the color of the plot line",
+  "grid_lines_major=<hex>": "Applies color to major girds",
+  "grid_lines_minor=<hex>": "Applies color to minor girds",
+  "tick_colors=<hex>": "Applies color to ticks",
+  "axfacecolor=<hex>": "Applies color to foreground",
+  "figfacecolor=<hex>": "Applies color to background",
+  "title_text=<any text>": "Sets title"
+}
+	return jsonify(attr)
+
+def examples():
+    return render_template('docs.html')
+
 # a in-process thing that enables usage of api using gui
 @app.route('/test_form')
 def form():
@@ -44,7 +69,7 @@ def form():
 def static_from_root():
     return send_from_directory(app.static_folder, request.path[1:])
 
-# A simple safty mechanism if anything goes wrong
+# A simple safty mechanism if anything goes wrong doesnt work tho...
 @app.route('/reset', methods=['GET'])
 def reset():
     passwd = request.args.get('passwd')

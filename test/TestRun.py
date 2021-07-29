@@ -32,6 +32,7 @@ async def test():
             file_ = open(file, "wb")
             file_.write(await r.read())
             file_.close()
+            await session.close()
             print(f"Done => {formula_output}")
 
 def test_prof():
@@ -49,4 +50,4 @@ def test_prof():
 # loop = asyncio.get_event_loop()
 # loop.run_until_complete(test_prof())
 
-test_prof()
+#test_prof()
