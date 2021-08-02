@@ -3,3 +3,4 @@ gunicorn
 matplotlib
 numpy
 mpl_toolkits
+scipy

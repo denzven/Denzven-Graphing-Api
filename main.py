@@ -11,12 +11,14 @@ import traceback
 from api.flat_graph import flat_graph_runner
 from api.polar_graph import polar_graph_runner
 from api.threeD_graph import threeD_graph_runner
+from api.derivate_graph import derivative_graph_runner
 
 # Loading up the flask app and the blueprints in the /api folder
 app = Flask(__name__)
 app.register_blueprint(flat_graph_runner)
 app.register_blueprint(polar_graph_runner)
 app.register_blueprint(threeD_graph_runner)
+app.register_blueprint(derivative_graph_runner)
 
 # Landing page Html in /templates
 @app.route('/')
