@@ -3,18 +3,17 @@ from flask import *
 import matplotlib
 from matplotlib import *
 matplotlib.use("agg")
-from scipy.misc import derivative
 import numpy as np
 import matplotlib.pyplot as plt
 import os
 import traceback
 
 # Adding a blueprint to start the graph function
-derivative_graph_runner = Blueprint('derivative_graph_runner', __name__)
+multiflat_graph_runner = Blueprint('multiflat_graph_runner', __name__)
 
 # Using the Blueprint made with a path
-@derivative_graph_runner.route('/DenzGraphingApi/v1/derivative_graph/test/plot', methods=['GET'])
-def derivative_graph(): # The Funtion
+@multiflat_graph_runner.route('/DenzGraphingApi/v1/multiflat_graph/test/plot', methods=['GET'])
+def multiflat_graph(): # The Funtion
     # Getting all the parameters from the url
     formula_og_input = request.args.get('formula')
     grid_value       = request.args.get('grid')
@@ -42,7 +41,7 @@ def derivative_graph(): # The Funtion
     print('\n\n\n')
     print(f'+========================================+')
     print(f'|                                         ')
-    print(f'|       Graph_Type : derivativeGraph            ')
+    print(f'|       Graph_Type : MultiFlatGraph            ')
     print(f'| formula_og_input : {formula_og_input}   ')
     print(f'|       grid_value : {grid_value}         ')
     print(f'|       plot_style : {plot_style}         ')
@@ -83,7 +82,7 @@ def derivative_graph(): # The Funtion
 
         try: # Replacing only some with small letters to work in the eval
             formula_og_input = str(formula_og_input.upper()) # My sole Defence against every single thing
-            formula = formula_og_input.replace('X', 'x')
+            formula = formula_og_input.replace('x', 'X')
             formula = formula.replace('y', 'Y')
             formula = formula.replace('e', 'math.e')
             formula = formula.replace('SIN', 'np.sin')
@@ -168,31 +167,31 @@ def derivative_graph(): # The Funtion
                 )
             
         #---
-
-        try: # Core funtion of actually getting the numbers
-            fig, ax = plt.subplots()
-            def function(x):
-                return eval(formula)
-            def deriv(x):
-	            return derivative(function, x)            
-            pass
-        except Exception as e:
-            return jsonify(
-                error = str(e), 
-                error_id = 'ERROR_MAIN_EVAL_TRY_BLOCK',
-                fix = 'Check the formula input again,\n (PS: 2x has to be written as 2*x, please read the docs for further info: \n https://denzven.pythonanywhere.com/docs)'
-                )
+        formula = list(formula.split(","))
+        for x in range(len(formula)):
+            try: # Core funtion of actually getting the numbers
+                X, Y = np.meshgrid(xlist, ylist)
+                fig, ax = plt.subplots()
+                print(formula)
+                print(formula[x])
+                print(type(formula[x]))
+                #F = eval(formula[x])
+                ax.contour(X, Y, eval(formula[x]), [0],colors='#4c82ca')
+                 # The most Dangerous Eval... DO NOT USE THIS... it jus works for this case
+                pass
+            except Exception as e:
+                return jsonify(
+                    error = str(e), 
+                    error_id = 'ERROR_MAIN_EVAL_TRY_BLOCK',
+                    fix = 'Check the formula input again,\n (PS: 2x has to be written as 2*x, please read the docs for further info: \n https://denzven.pythonanywhere.com/docs)'
+                    )
             
         #---
 
         try: #setting up Line_style
             if line_style is None:
-                plt.plot(ylist, function(ylist), color='#4c82ca', label='Function')
-                plt.plot(ylist, deriv(ylist), color='green', label='Derivative')
                 pass
             if line_style is not None:
-                plt.plot(ylist, function(ylist), color=f'#{line_style}', label='Function')
-                plt.plot(ylist, deriv(ylist), color='green', label='Derivative')
                 pass
         except Exception as e:
             return jsonify(
@@ -369,11 +368,10 @@ def derivative_graph(): # The Funtion
         #---
 
         try: #adding title and saving and sending the file
-            ax.set_aspect('auto')
-            plt.legend(loc='upper left')
-            fig.savefig('../derivative_plot_test.png', bbox_inches='tight', dpi=150)
-            filename = '../derivative_plot_test.png'
-            plt.close(fig)
+            ax.set_aspect('equal')
+            fig.savefig('../Multiflat_plot_test.png', bbox_inches='tight', dpi=150)
+            filename = '../Multiflat_plot_test.png'
+            #plt.close(fig)
             return send_file(filename)
         except Exception as e:
                 return jsonify(error = str(e) , error_id = 'ERROR_SAVE_FIG_TRY_BLOCK') 

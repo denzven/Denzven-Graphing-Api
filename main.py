@@ -9,6 +9,7 @@ import traceback
 
 # importing Blueprints
 from api.flat_graph import flat_graph_runner
+from api.multi_flat_graph import multiflat_graph_runner
 from api.polar_graph import polar_graph_runner
 from api.threeD_graph import threeD_graph_runner
 from api.derivate_graph import derivative_graph_runner
@@ -16,6 +17,7 @@ from api.derivate_graph import derivative_graph_runner
 # Loading up the flask app and the blueprints in the /api folder
 app = Flask(__name__)
 app.register_blueprint(flat_graph_runner)
+app.register_blueprint(multiflat_graph_runner)
 app.register_blueprint(polar_graph_runner)
 app.register_blueprint(threeD_graph_runner)
 app.register_blueprint(derivative_graph_runner)
@@ -88,9 +90,9 @@ def rickroll():
 # Run
 if __name__ == '__main__':
 #    app.run(port=5000)#--------------------------pythonanywhere
-#    app.run(host='localhost', port=8080)#---------local
+    app.run(host='localhost', port=8080,debug=True, use_reloader=True)#---------local
 #    app.run(host='0.0.0.0', port=8080)#---------replit
-    app.run(debug=True, use_reloader=True)#------heroku
+#    app.run(debug=True, use_reloader=True)#------heroku
 # Join my chill dicord server:
 # https://dsc.gg/chilly_place
 # 69 Nice
