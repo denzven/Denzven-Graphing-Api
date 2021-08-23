@@ -1,21 +1,20 @@
 #importing stuff
 from flask import *
-from config import *
 import matplotlib
 from matplotlib import *
+from config import *
 matplotlib.use("agg")
-from scipy.misc import derivative
 import numpy as np
 import matplotlib.pyplot as plt
 import os
 import traceback
 
 # Adding a blueprint to start the graph function
-derivative_graph_runner = Blueprint('derivative_graph_runner', __name__)
+beta_flat_graph_runner = Blueprint('beta_flat_graph_runner', __name__)
 
 # Using the Blueprint made with a path
-@derivative_graph_runner.route(DERIVATIVE_GRAPH_ROUTE, methods=['GET'])
-def derivative_graph(): # The Funtion
+@beta_flat_graph_runner.route(BETA_FLAT_GRAPH_ROUTE, methods=['GET'])
+def beta_flat_graph(): # The Funtion
     # Getting all the parameters from the url
     formula_og_input = request.args.get('formula')
     grid_value       = request.args.get('grid')
@@ -43,7 +42,7 @@ def derivative_graph(): # The Funtion
     print('\n\n\n')
     print(f'+========================================+')
     print(f'|                                         ')
-    print(f'|       Graph_Type : derivativeGraph      ')
+    print(f'|       Graph_Type : FlatGraph            ')
     print(f'| formula_og_input : {formula_og_input}   ')
     print(f'|       grid_value : {grid_value}         ')
     print(f'|       plot_style : {plot_style}         ')
@@ -83,27 +82,29 @@ def derivative_graph(): # The Funtion
         #---
 
         try: # Replacing only some with small letters to work in the eval
-            formula_og_input = str(formula_og_input.upper()) # My sole Defence against every single thing
-            formula = formula_og_input.replace('X', 'x')
-            formula = formula.replace('y', 'Y')
-            formula = formula.replace('e', 'math.e')
-            formula = formula.replace('SIN', 'np.sin')
-            formula = formula.replace('COS', 'np.cos')
-            formula = formula.replace('TAN', 'np.tan')
-            formula = formula.replace('√', 'np.sqrt')
-            formula = formula.replace('SQRT', 'np.sqrt')
-            formula = formula.replace('π', 'np.pi')
-            formula = formula.replace('PI', 'np.pi')
-            formula = formula.replace('ABS', 'np.absolute')
-            formula = formula.replace('MIN', 'np.min')
-            formula = formula.replace('MAX', 'np.max')
-            formula = formula.replace('WHERE', 'np.where')
-            formula = formula.replace('CLAMP', 'np.clip')
-            formula = formula.replace('LOG', 'np.log')
-            formula = formula.replace('FLOOR', 'np.floor')
-            formula = formula.replace('CEIL', 'np.ceil')
-            formula = formula.replace('ROUND', 'np.ceil')
-            formula = formula.replace(')(', ')*(')
+            #formula_og_input = str(formula_og_input.upper()) # My sole Defence against every single thing
+            from sympy.parsing.sympy_parser import (
+              parse_expr, # converts string to sympy expression
+              standard_transformations, # eg. 5! = 5*4*3*2*1
+              implicit_multiplication_application, # e.g. 2x = 2*x
+              convert_xor # e.g. 2^x = 2**x
+            )
+
+
+
+            # <--------------[PARSE EXPRESSION]---------------> #
+
+            def parseExpression(expression):
+            
+              expression = expression.replace('y=', '')
+              expression = expression.replace('^', '**')
+              expression = expression.replace('e', 'E')
+
+              transformations = (standard_transformations + (implicit_multiplication_application,) + (convert_xor,))
+              equation = parse_expr(expression, transformations=transformations)
+
+              return equation
+            formula = parseExpression(formula_og_input)
         except Exception as e:
             return jsonify(
                 error = str(e), 
@@ -115,7 +116,7 @@ def derivative_graph(): # The Funtion
 
         try: # Setting plot style
             if plot_style is None:
-                plt.style.use(DEFAULT_PLOTSTYLE)
+                plt.style.use('dark_background')
                 pass
             if plot_style is not None:
                 plot_style_choice = int(plot_style)
@@ -128,7 +129,7 @@ def derivative_graph(): # The Funtion
         except Exception as e:
             return jsonify(
                 error = str(e), 
-                error_id = ERROR_ID_PLOT_STYLE,
+                error_id = 'ERROR_PLOT_STYLE_TRY_BLOCK',
                 fix = 'change your plot_style to a valid number (between 0-25)'
                 )
             
@@ -171,11 +172,9 @@ def derivative_graph(): # The Funtion
         #---
 
         try: # Core funtion of actually getting the numbers
-            fig, ax = plt.subplots()
-            def function(x):
-                return eval(formula)
-            def deriv(x):
-	            return derivative(function, x)            
+            import numexpr as ne
+            X = x_coord
+            Y = ne.evaluate(str(formula))
             pass
         except Exception as e:
             return jsonify(
@@ -188,12 +187,10 @@ def derivative_graph(): # The Funtion
 
         try: #setting up Line_style
             if line_style is None:
-                plt.plot(ylist, function(ylist), color='#4c82ca', label='Function')
-                plt.plot(ylist, deriv(ylist), color='green', label='Derivative')
+                ax.contour(X, Y, F, [0],colors='#4c82ca')
                 pass
             if line_style is not None:
-                plt.plot(ylist, function(ylist), color=f'#{line_style}', label='Function')
-                plt.plot(ylist, deriv(ylist), color='green', label='Derivative')
+                ax.contour(X, Y, F, [0],colors=f"#{line_style}")
                 pass
         except Exception as e:
             return jsonify(
@@ -370,10 +367,9 @@ def derivative_graph(): # The Funtion
         #---
 
         try: #adding title and saving and sending the file
-            ax.set_aspect('auto')
-            plt.legend(loc='upper left')
-            fig.savefig('../derivative_plot_test.png', bbox_inches='tight', dpi=150)
-            filename = '../derivative_plot_test.png'
+            ax.set_aspect('equal')
+            fig.savefig('../flat_plot_test.png', bbox_inches='tight', dpi=150)
+            filename = '../flat_plot_test.png'
             plt.close(fig)
             return send_file(filename)
         except Exception as e:

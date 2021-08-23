@@ -2,6 +2,7 @@
 from flask import *
 import matplotlib
 from matplotlib import *
+from config import *
 matplotlib.use("agg")
 import numpy as np
 import matplotlib.pyplot as plt
@@ -12,7 +13,7 @@ import traceback
 flat_graph_runner = Blueprint('flat_graph_runner', __name__)
 
 # Using the Blueprint made with a path
-@flat_graph_runner.route('/DenzGraphingApi/v1/flat_graph/test/plot', methods=['GET'])
+@flat_graph_runner.route(FLAT_GRAPH_ROUTE, methods=['GET'])
 def flat_graph(): # The Funtion
     # Getting all the parameters from the url
     formula_og_input = request.args.get('formula')

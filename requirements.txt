@@ -4,3 +4,4 @@ matplotlib
 numpy
 mpl_toolkits
 scipy
+pylab

@@ -1,4 +1,5 @@
 #importing stuff
+from config import MAIN_COLOR
 from flask import *
 import matplotlib
 from matplotlib import *
@@ -176,7 +177,7 @@ def multiflat_graph(): # The Funtion
                 print(formula[x])
                 print(type(formula[x]))
                 #F = eval(formula[x])
-                ax.contour(X, Y, eval(formula[x]), [0],colors='#4c82ca')
+                ax.contour(X, Y, eval(formula[x]), [0],colors=MAIN_COLOR)
                  # The most Dangerous Eval... DO NOT USE THIS... it jus works for this case
                 pass
             except Exception as e:
