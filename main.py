@@ -1,11 +1,8 @@
 # importing stuff
-from flask import *
-import matplotlib
-matplotlib.use("agg")
-import numpy as np
+import flask
+import config
 import matplotlib.pyplot as plt
-import os
-import traceback
+import asyncio
 
 # importing Blueprints
 from api.flat_graph import flat_graph_runner
@@ -15,9 +12,13 @@ from api.polar_graph import polar_graph_runner
 from api.threeD_graph import threeD_graph_runner
 from api.derivate_graph import derivative_graph_runner
 from api.latex import latex_runner
+import matplotlib
+
+matplotlib.use("agg")
+
 
 # Loading up the flask app and the blueprints in the /api folder
-app = Flask(__name__)
+app = flask.Flask(__name__)
 app.register_blueprint(flat_graph_runner)
 app.register_blueprint(beta_flat_graph_runner)
 app.register_blueprint(multiflat_graph_runner)
@@ -26,25 +27,43 @@ app.register_blueprint(threeD_graph_runner)
 app.register_blueprint(derivative_graph_runner)
 app.register_blueprint(latex_runner)
 
+
 # Landing page Html in /templates
-@app.route('/')
+@app.route("/")
 def home():
-    return render_template('home_page.html')
+    """
+    Html for the Website HomePage
+    """
+    asyncio.run(config.SendLogs("someone visited home page"))
+    print("hmm")
+    return flask.render_template("home_page.html")
+
 
 # Sub-pages for the "about the api" page in website in /templates
-@app.route('/api')
+@app.route(config.API_HOMEPAGE_ROUTE)
 def api():
-    return render_template('about_api.html')
+    """
+    Html for the Api HomePage
+    """
+    return flask.render_template("about_api.html")
+
 
 # Sub-pages for the "api docs" page in website in /templates
-@app.route('/docs')
-def examples():
-    return render_template('docs.html')
+@app.route(config.API_DOCS_ROUTE)
+def docs():
+    """
+    Html for the Docs HomePage
+    """
+    return flask.render_template("docs.html")
+
 
 # Sub-pages for the "api docs" page in website in /templates
-@app.route('/DenzGraphingApi/v1/attr')
-def attr():
-    attr = {
+@app.route(config.API_ATTRIBUTES_ROUTE)
+def attributes():
+    """
+    Return the Attributes For the Graphs
+    """
+    attributes = {
         "grid=<1|2|3>": "Adds grids to the graph",
         "plot_style=<0-25>": "Determines the plot_style (boring)",
         "x_coord=<any>": "Fixes the value of the x_coord",
@@ -59,44 +78,58 @@ def attr():
         "tick_colors=<hex>": "Applies color to ticks",
         "axfacecolor=<hex>": "Applies color to foreground",
         "figfacecolor=<hex>": "Applies color to background",
-        "title_text=<any text>": "Sets title"
-        }
-    return jsonify(attr)
+        "title_text=<any text>": "Sets title",
+    }
+    return flask.jsonify(attributes)
 
-def examples():
-    return render_template('docs.html')
 
 # a in-process thing that enables usage of api using gui
-@app.route('/test_form')
+@app.route(config.API_FORM_ROUTE)
 def form():
-    return render_template('form.html')
+    """
+    Html for the Using the Api from the website itself (wip)
+    """
+    return flask.render_template("form.html")
+
 
 # Submitting the robots.txt and sitemap.xml for SEO
-@app.route('/robots.txt')
-@app.route('/sitemap.xml')
+@app.route("/robots.txt")
+@app.route("/sitemap.xml")
 def static_from_root():
-    return send_from_directory(app.static_folder, request.path[1:])
+    """
+    Returns the Sitemap and robots.txt for the Website
+    """
+    return flask.send_from_directory(app.static_folder, flask.request.path[1:])
+
 
 # A simple safty mechanism if anything goes wrong doesnt work tho...
-@app.route('/reset', methods=['GET'])
+@app.route(config.API_RESET_ROUTE, methods=["GET"])
 def reset():
-    passwd = request.args.get('passwd')
-    if passwd == 'passwd':
-        plt.close('all')
-        return 'done'
+    """
+    Supposed to "reset" plots.. idk if it works
+    """
+    passwd = flask.request.args.get("passwd")
+    if passwd == "passwd":
+        plt.close("all")
+        return "done"
+
 
 # When you have a full website you can't leave a chance for a rickroll 🤣
-@app.route('/rickroll')
+@app.route(config.API_RICKROLL_ROUTE)
 def rickroll():
-    return redirect("https://youtu.be/dQw4w9WgXcQ")
+    """
+    Rickroll
+    """
+    return flask.redirect("https://youtu.be/dQw4w9WgXcQ")
 
-#Main portion for running the flask app using diff hosting services
+
+# Main portion for running the flask app using diff hosting services
 # Run
-if __name__ == '__main__':
-#    app.run(port=5000)#--------------------------pythonanywhere
-    app.run(host='localhost', port=8080,debug=True, use_reloader=True)#---------local
-#    app.run(host='0.0.0.0', port=8080)#---------replit
-#    app.run(debug=True, use_reloader=True)#------heroku
+if __name__ == "__main__":
+    # app.run(port=5000)#--------------------------------------------------PythonAnywhere
+    app.run(host="localhost", port=8080, debug=True, use_reloader=True)  # --Local
+    # app.run(host='0.0.0.0', port=8080)#----------------------------------Replit
+    # app.run(debug=True, use_reloader=True)#------------------------------Heroku
+
 # Join my chill dicord server:
 # https://dsc.gg/chilly_place
-# 69 Nice
