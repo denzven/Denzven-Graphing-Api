@@ -1,30 +1,59 @@
-from modules.module import renderTeX
-import config
+#from modules.module import renderTeX
+#import config
 import matplotlib.pyplot as plt
 import sympy as sp
+import sympy.parsing.sympy_parser as spr
 import discord
 import numpy as np
+import numexpr as ne
 
-x = sp.symbols("x")
+x = sp.symbols('x')
+y = sp.symbols('y')
 
 
-def GetExpression(formula):
-    """
+def GetExpression(InputFormula):
+    '''
     Gets the "symified" version of the input str
-    """
-    formula = formula.replace("y=", "")
-    formula = formula.replace("^", "**")
-    formula = formula.replace("e", "E")
+    '''
+    if '=' in InputFormula:
+        ExpList = InputFormula.split('=')
+        InputFormula = ExpList[0] + "-" + "(" + ExpList[::-1][0] + ")"
+        print(' Formula Contains =')
 
-    transformations = (
-        sp.standard_transformations
-        + (sp.implicit_multiplication_application,)
-        + (sp.convert_xor,)
-    )
-    equation = sp.parse_expr(formula, transformations=transformations)
+    if 'y' not in InputFormula:
+        print("Formula doesnt contain y")
+        
+    if 'x' not in InputFormula:
+        print("Formula doesnt contain x")
 
-    return
+    if '=0' in InputFormula:
+        print("Formula contains =0 which is not needed lmao")
 
+    InputFormula = InputFormula.replace('√', 'sqrt')
+    InputFormula = InputFormula.replace('^', '**')
+    print(InputFormula)
+
+    transformations = (spr.standard_transformations + (spr.implicit_multiplication_application,) + (spr.convert_xor,))
+    equation = spr.parse_expr((InputFormula) , transformations=transformations)
+
+    print(str(equation)) 
+#    x = np.linspace(-10, 10, num=1000)
+#    y = np.linspace(-10, 10, num=1000)
+#
+#    x, y = np.meshgrid(x, y)
+#
+#    F = ne.evaluate(str(equation))
+#    #F = eval(str(equation))
+#    print(x, y)
+#    ax = plt.gca()
+#    plt.contour(x, y, F, [0])
+#    #plt.plot(X,Y)
+#    ax.set_aspect('equal')
+#    plt.show()
+#    print(F) 
+    return equation
+
+GetExpression(input("--->"))
 
 def RenderLatex(InputLatex):
     """
