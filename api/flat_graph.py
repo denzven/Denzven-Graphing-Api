@@ -1,10 +1,12 @@
 # importing stuff
+from Functions.functions import GetExpression
 import flask
 import matplotlib
 import asyncio
 import config
 import numpy as np
 import matplotlib.pyplot as plt
+import numexpr as ne
 
 matplotlib.use("agg")
 
@@ -120,29 +122,7 @@ def flat_graph():
         # ---
 
         try:  # Replacing only some with small letters to work in the eval
-            formula_og_input = str(
-                formula_og_input.upper()
-            )  # My sole Defence against every single thing
-            formula = formula_og_input.replace("x", "X")
-            formula = formula.replace("y", "Y")
-            formula = formula.replace("e", "math.e")
-            formula = formula.replace("SIN", "np.sin")
-            formula = formula.replace("COS", "np.cos")
-            formula = formula.replace("TAN", "np.tan")
-            formula = formula.replace("√", "np.sqrt")
-            formula = formula.replace("SQRT", "np.sqrt")
-            formula = formula.replace("π", "np.pi")
-            formula = formula.replace("PI", "np.pi")
-            formula = formula.replace("ABS", "np.absolute")
-            formula = formula.replace("MIN", "np.min")
-            formula = formula.replace("MAX", "np.max")
-            formula = formula.replace("WHERE", "np.where")
-            formula = formula.replace("CLAMP", "np.clip")
-            formula = formula.replace("LOG", "np.log")
-            formula = formula.replace("FLOOR", "np.floor")
-            formula = formula.replace("CEIL", "np.ceil")
-            formula = formula.replace("ROUND", "np.ceil")
-            formula = formula.replace(")(", ")*(")
+            formula = GetExpression(formula_og_input)
         except Exception as e:
             return flask.jsonify(
                 error=str(e),
@@ -211,9 +191,7 @@ def flat_graph():
         try:  # Core funtion of actually getting the numbers
             X, Y = np.meshgrid(xlist, ylist)
             fig, ax = plt.subplots()
-            F = eval(
-                formula
-            )  # The most Dangerous Eval... !D USE THIS... it jus works for this case
+            F = ne.evaluate(str(formula))  # The most Dangerous Eval... !D USE THIS... it jus works for this case
             pass
         except Exception as e:
             return flask.jsonify(
@@ -423,7 +401,7 @@ def flat_graph():
             fig.savefig("../flat_plot_test.png", bbox_inches="tight", dpi=150)
             filename = "../flat_plot_test.png"
             plt.close(fig)
-            return send_file(filename)
+            return flask.send_file(filename)
         except Exception as e:
             return flask.jsonify(error=str(e), error_id="ERROR_SAVE_FIG_TRY_BLOCK")
     except Exception as e:

@@ -24,5 +24,5 @@ async def SendLogs(text: str):
     """
     function to Use DiscordWebhook to send a msg to Discord Using Webhooks
     """
-    DiscordWebhook = discord.SyncWebhook.from_url(WEBHOOK_URL)
-    DiscordWebhook.send(text)
+    #DiscordWebhook = discord.SyncWebhook.from_url(WEBHOOK_URL)
+    #DiscordWebhook.send(text)

@@ -132,4 +132,5 @@ if __name__ == "__main__":
     # app.run(debug=True, use_reloader=True)#------------------------------Heroku
 
 # Join my chill dicord server:
+
 # https://dsc.gg/chilly_place

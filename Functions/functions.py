@@ -36,24 +36,8 @@ def GetExpression(InputFormula):
     transformations = (spr.standard_transformations + (spr.implicit_multiplication_application,) + (spr.convert_xor,))
     equation = spr.parse_expr((InputFormula) , transformations=transformations)
 
-    print(str(equation)) 
-#    x = np.linspace(-10, 10, num=1000)
-#    y = np.linspace(-10, 10, num=1000)
-#
-#    x, y = np.meshgrid(x, y)
-#
-#    F = ne.evaluate(str(equation))
-#    #F = eval(str(equation))
-#    print(x, y)
-#    ax = plt.gca()
-#    plt.contour(x, y, F, [0])
-#    #plt.plot(X,Y)
-#    ax.set_aspect('equal')
-#    plt.show()
-#    print(F) 
+    print(str(equation))
     return equation
-
-GetExpression(input("--->"))
 
 def RenderLatex(InputLatex):
     """
