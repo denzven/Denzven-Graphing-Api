@@ -110,18 +110,6 @@ def flat_graph():
         # ---
 
         try:  # Replacing only some with small letters to work in the eval
-            print("hmm")
-            pass
-        except Exception as e:
-            return flask.jsonify(
-                error=str(e),
-                error_id="ERROR_FORMULA_REPLACE_TRY_BLOCK",
-                fix="Please check your formula again, it contains unsupported characters",
-            )
-
-        # ---
-
-        try:  # Replacing only some with small letters to work in the eval
             formula = GetExpression(formula_og_input)
         except Exception as e:
             return flask.jsonify(
