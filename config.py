@@ -3,6 +3,8 @@ import discord
 DEFAULT_PLOTSTYLE = "dark_background"
 MAIN_COLOR = "#01abe1"
 MAIN_BG_COLOR = "#1d1925"
+DEFAULT_COORD = 10
+DEFAULT_DIVISIONS = 1000
 
 WEBHOOK_URL = "https://discord.com/api/webhooks/882334551685357578/OZ5bT6xLnHvOQzQGt1-GUcrGElY4NSPLHPBk4buVfqVKHOnI_MnLxw_rQtrvMRui0yIz"
 

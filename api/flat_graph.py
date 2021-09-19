@@ -70,7 +70,7 @@ def flat_graph():
     # Printing tha values for debugging
     OutputMessage = f"""
     ```py
-                                  
+
        Graph_Type : FlatGraph
  formula_og_input : {formula_og_input}
        grid_value : {grid_value}
@@ -92,21 +92,13 @@ def flat_graph():
     asyncio.run(config.SendLogs(OutputMessage))
     # Running the funtion in try-execpt blocks to avoid 500 type error
     try:  # Main Try-Execept block
-
-        try:  # Checking for Formula
-            if formula_og_input == None:
-                return flask.jsonify(
-                    error="formula input != provided",
-                    error_id="ERROR_NO_FORMULA_INPUT_TRY_BLOCK",
-                    fix="!D leave the Formula parameter empty",
-                )
-        except Exception as e:
+        if formula_og_input is None:
             return flask.jsonify(
-                error=str(e),
-                error_id="ERROR_FORMULA_INPUT_TRY_BLOCK",
-                fix="check your formula input again",
+                error="formula input is not provided",
+                error_id="ERROR_NO_FORMULA_INPUT_TRY_BLOCK",
+                fix="Dont leave the Formula parameter empty",
             )
-
+            
         # ---
 
         try:  # Replacing only some with small letters to work in the eval
@@ -120,34 +112,41 @@ def flat_graph():
 
         # ---
         try:  # Setting plot style
-            if plot_style == None:
-                plt.style.use("dark_background")
+            if plot_style is None:
+                plt.style.use(config.DEFAULT_PLOTSTYLE)
                 pass
-            if plot_style != None:
+            
+            if plot_style is not None:
                 plot_style_choice = int(plot_style)
                 try:
                     plot_style = plot_style_list[plot_style_choice]
-                except:
-                    return f"couldnt use this style {plot_style}"
+                except Exception:
+                    return flask.jsonify(
+                        error=f"couldnt use this style {plot_style}",
+                        error_id="ERROR_PLOT_STYLE_UNAVAILABLE_TRY_BLOCK",
+                        fix="Use a plot_style id between 1-25"
+                        )
                 plt.style.use(str(plot_style))
                 pass
+            
         except Exception as e:
             return flask.jsonify(
                 error=str(e),
                 error_id="ERROR_PLOT_STYLE_TRY_BLOCK",
-                fix="change your plot_style to a valid number (between 0-25)",
+                fix="change your plot_style to a valid number (between 0-25)"
             )
 
         # ---
 
         try:  # Setting x_coord
-            if x_coord == None:
-                xlist = np.linspace(-10, 10, num=1000)
+            if x_coord is None:
+                xlist = np.linspace(-(config.DEFAULT_COORD), config.DEFAULT_COORD, num=config.DEFAULT_DIVISIONS)
                 pass
-            if x_coord != None:
+            
+            if x_coord is not None:
                 x_coord = int(x_coord)
                 neg_x_coord = int(np.negative(x_coord))
-                xlist = np.linspace(neg_x_coord, x_coord, num=1000)
+                xlist = np.linspace(neg_x_coord, x_coord, num=config.DEFAULT_DIVISIONS)
                 pass
         except Exception as e:
             return flask.jsonify(
@@ -159,13 +158,13 @@ def flat_graph():
         # ---
 
         try:  # Setting y_coord
-            if y_coord == None:
-                ylist = np.linspace(-10, 10, num=1000)
+            if y_coord is None:
+                ylist = np.linspace(-(config.DEFAULT_COORD), config.DEFAULT_COORD, num=config.DEFAULT_DIVISIONS)
                 pass
-            if y_coord != None:
+            if y_coord is not None:
                 y_coord = int(y_coord)
                 neg_y_coord = int(np.negative(y_coord))
-                ylist = np.linspace(neg_y_coord, y_coord, num=1000)
+                ylist = np.linspace(neg_y_coord, y_coord, num=config.DEFAULT_DIVISIONS)
                 pass
         except Exception as e:
             return flask.jsonify(
@@ -179,7 +178,7 @@ def flat_graph():
         try:  # Core funtion of actually getting the numbers
             X, Y = np.meshgrid(xlist, ylist)
             fig, ax = plt.subplots()
-            F = ne.evaluate(str(formula))  # The most Dangerous Eval... !D USE THIS... it jus works for this case
+            F = ne.evaluate(str(formula))  # The most Dangerous Eval... DONT USE THIS... it jus works for this case
             pass
         except Exception as e:
             return flask.jsonify(
@@ -191,23 +190,23 @@ def flat_graph():
         # ---
 
         try:  # setting up Line_style
-            if line_style == None:
-                ax.contour(X, Y, F, [0], colors="#4c82ca")
+            if line_style is None:
+                plt.contour(X, Y, F, [0], colors=config.MAIN_COLOR)
                 pass
-            if line_style != None:
-                ax.contour(X, Y, F, [0], colors=f"#{line_style}")
+            if line_style is not None:
+                plt.contour(X, Y, F, [0], colors=f"#{line_style}")
                 pass
         except Exception as e:
             return flask.jsonify(
                 error=str(e),
                 error_id="ERROR_LINE_STYLE_TRY_BLOCK",
-                fix="check the line_style input it has to be a valid hex color withour #",
+                fix="check the line_style input it has to be a valid hex color without #",
             )
 
         # ---
 
         try:  # Setting up Grids
-            if grid_value == None:
+            if grid_value is None:
                 plt.minorticks_off()
                 plt.grid(b=False)
                 plt.grid(b=False)
@@ -216,29 +215,32 @@ def flat_graph():
             if grid_value == "1":
                 plt.minorticks_on()
                 plt.grid(b=True, which="major", color="#666666", linestyle="-")
-                plt.grid(
-                    b=True, which="minor", color="#999999", linestyle="-", alpha=0.2
-                )
+                plt.grid(b=True, which="minor", color="#999999", linestyle="-", alpha=0.2)
                 pass
 
+            if grid_value == "2":
+                plt.minorticks_on()
+                plt.grid(b=True, which="major", color="#666666", linestyle="-")
+                plt.grid(b=True, which="minor", color=f"#{grid_lines_minor}", linestyle="-", alpha=0.2,)
+                pass
+            
             if grid_value == "3":
                 plt.minorticks_on()
-                plt.grid(
-                    b=True, which="major", color=f"#{grid_lines_major}", linestyle="-"
-                )
-                plt.grid(
-                    b=True,
-                    which="minor",
-                    color=f"#{grid_lines_minor}",
-                    linestyle="-",
-                    alpha=0.2,
-                )
+                plt.grid(b=True, which="major", color=f"#{grid_lines_major}", linestyle="-")
+                plt.grid(b=True,which="minor", color="#999999", linestyle="-", alpha=0.2,)
                 pass
+            
+            if grid_value == "4":
+                plt.minorticks_on()
+                plt.grid(b=True, which="major", color=f"#{grid_lines_major}", linestyle="-")
+                plt.grid(b=True,which="minor",color=f"#{grid_lines_minor}", linestyle="-", alpha=0.2,)
+                pass
+            
         except Exception as e:
             return flask.jsonify(
                 error=str(e),
                 error_id="ERROR_GRID_VALUE_TRY_BLOCK",
-                fix="check the grid input it has to be 1,2 or 3",
+                fix="check the grid input it has to be 1,2,3 or 4",
             )
 
         # ---
@@ -246,7 +248,7 @@ def flat_graph():
         try:  # Setting up each axis spine
 
             try:  # Top-Spine
-                if spine_top == None:
+                if spine_top is None:
                     ax.spines["top"].set_color(f"#ffffff")
                     pass
 
