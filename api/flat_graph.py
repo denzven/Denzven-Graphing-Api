@@ -1,4 +1,5 @@
 # importing stuff
+from flask.config import Config
 from Functions.functions import GetExpression
 import flask
 import matplotlib
@@ -38,34 +39,14 @@ def flat_graph():
     axfacecolor = flask.request.args.get("axfacecolor")
     figfacecolor = flask.request.args.get("figfacecolor")
     title_text = flask.request.args.get("title_text")
-    plot_style_list = [
-        "Solarize_Light2",
-        "_classic_test_patch",
-        "bmh",
-        "classic",
-        "dark_background",
-        "fast",
-        "fivethirtyeight",
-        "ggplot",
-        "grayscale",
-        "seaborn",
-        "seaborn-bright",
-        "seaborn-colorblind",
-        "seaborn-dark",
-        "seaborn-dark-palette",
-        "seaborn-darkgrid",
-        "seaborn-deep",
-        "seaborn-muted",
-        "seaborn-notebook",
-        "seaborn-paper",
-        "seaborn-pastel",
-        "seaborn-poster",
-        "seaborn-talk",
-        "seaborn-ticks",
-        "seaborn-white",
-        "seaborn-whitegrid",
-        "tableau-colorblind10",
-    ]
+    plot_style_list = [ "Solarize_Light2", "_classic_test_patch", "bmh", 
+                        "classic", "dark_background", "fast", "fivethirtyeight", 
+                        "ggplot", "grayscale", "seaborn", "seaborn-bright", 
+                        "seaborn-colorblind", "seaborn-dark", "seaborn-dark-palette", 
+                        "seaborn-darkgrid", "seaborn-deep", "seaborn-muted", 
+                        "seaborn-notebook", "seaborn-paper", "seaborn-pastel", "seaborn-poster", 
+                        "seaborn-talk", "seaborn-ticks", "seaborn-white", 
+                        "seaborn-whitegrid", "tableau-colorblind10",]
 
     # Printing tha values for debugging
     OutputMessage = f"""
@@ -177,7 +158,6 @@ def flat_graph():
 
         try:  # Core funtion of actually getting the numbers
             X, Y = np.meshgrid(xlist, ylist)
-            fig, ax = plt.subplots()
             F = ne.evaluate(str(formula))  # The most Dangerous Eval... DONT USE THIS... it jus works for this case
             pass
         except Exception as e:
@@ -244,15 +224,16 @@ def flat_graph():
             )
 
         # ---
-
+        fig = plt.figure() 
+        ax = plt.gca()
         try:  # Setting up each axis spine
 
             try:  # Top-Spine
                 if spine_top is None:
-                    ax.spines["top"].set_color(f"#ffffff")
+                    ax.spines["top"].set_color(config.DEFAULT_AXES_COLOR)
                     pass
 
-                if spine_top != None:
+                if spine_top is not None:
                     ax.spines["top"].set_color(f"#{spine_top}")
                     pass
             except Exception as e:
@@ -265,11 +246,11 @@ def flat_graph():
             # ---
 
             try:  # Bottom-Spine
-                if spine_bottom == None:
-                    ax.spines["bottom"].set_color(f"#ffffff")
+                if spine_bottom is None:
+                    ax.spines["bottom"].set_color(config.DEFAULT_AXES_COLOR)
                     pass
 
-                if spine_bottom != None:
+                if spine_bottom is not None:
                     ax.spines["bottom"].set_color(f"#{spine_bottom}")
                     pass
             except Exception as e:
@@ -281,11 +262,11 @@ def flat_graph():
             # ---
 
             try:  # Left-Spine
-                if spine_left == None:
-                    ax.spines["left"].set_color(f"#ffffff")
+                if spine_left is None:
+                    ax.spines["left"].set_color(config.DEFAULT_AXES_COLOR)
                     pass
 
-                if spine_left != None:
+                if spine_left is not None:
                     ax.spines["left"].set_color(f"#{spine_left}")
                     pass
             except Exception as e:
@@ -297,11 +278,11 @@ def flat_graph():
             # ---
 
             try:  # Right-Spine
-                if spine_right == None:
-                    ax.spines["right"].set_color(f"#ffffff")
+                if spine_right is None:
+                    ax.spines["right"].set_color(config.DEFAULT_AXES_COLOR)
                     pass
 
-                if spine_right != None:
+                if spine_right is not None:
                     ax.spines["right"].set_color(f"#{spine_right}")
                     pass
             except Exception as e:
@@ -320,10 +301,10 @@ def flat_graph():
         # ---
 
         try:  # setting up tick_colors
-            if tick_colors == None:
-                ax.tick_params(colors="#ffffff", which="both")
+            if tick_colors is None:
+                ax.tick_params(colors=config.DEFAULT_TICKS_COLOR, which="both")
                 pass
-            if tick_colors != None:
+            if tick_colors is not None:
                 ax.tick_params(colors=f"#{tick_colors}", which="both")
                 pass
         except Exception as e:
@@ -336,9 +317,9 @@ def flat_graph():
         # ---
 
         try:  # setting up axfacecolors
-            if axfacecolor == None:
+            if axfacecolor is None:
                 pass
-            if axfacecolor != None:
+            if axfacecolor is not None:
                 ax.set_facecolor(f"#{axfacecolor}")
                 pass
         except Exception as e:
@@ -351,9 +332,9 @@ def flat_graph():
         # ---
 
         try:  # setting up figfacecolors
-            if figfacecolor == None:
+            if figfacecolor is None:
                 pass
-            if figfacecolor != None:
+            if figfacecolor is not None:
                 fig.set_facecolor(f"#{figfacecolor}")
                 pass
         except Exception as e:
@@ -366,16 +347,11 @@ def flat_graph():
         # ---
 
         try:  # setting up title
-            if title_text == None:
-                plt.title(
-                    f"graphical representation of {formula_og_input} = 0",
-                    color="#ffffff",
-                    pad=20,
-                    fontsize="small",
-                )
+            if title_text is None:
+                plt.title(f"graphical representation of {formula_og_input} = 0", color=config.DEFAULT_TITLE_COLOR, pad=20, fontsize="small")
                 pass
-            if title_text != None:
-                plt.title(f"{title_text}", color="#ffffff", pad=20, fontsize="small")
+            if title_text is not None:
+                plt.title(f"{title_text}", color=config.DEFAULT_TITLE_COLOR, pad=20, fontsize="small")
                 pass
         except Exception as e:
             return flask.jsonify(
