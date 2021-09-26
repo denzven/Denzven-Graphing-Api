@@ -18,7 +18,8 @@
 * `import DenzGraphingApiWrapper_py` | *You might want to add an `as` statement after this for better readability*
 
 ### What you **can** do with the API as of now
-- [X] Create beautiful graphs using `heroku_graph(formula)` function | *`formula`* takes a mathematical equation(say, `"2+2+5"`) in `String` object type
+- [X] Create beautiful graphs using `heroku_graph(formula)` and the `py_anywhere_graph` functions 
+-  *`formula`* takes a mathematical equation(say, `"2+2+5"`) in `String` object type
     
 
 #### Well, what are you waiting for? Start coding!
