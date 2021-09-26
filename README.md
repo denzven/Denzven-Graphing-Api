@@ -3,8 +3,12 @@
 # Docs 
 ### Install the API
 ```pip install Denzven-Graphing-Api-Wrapper```
+
                OR
+               
 ```pip install DenzGraphingApiWrapper-py```
+               
                OR
+               
 ```pip install git+https://github.com/denzven/DenzGraphingApiWrapper_py.git```               
 > more info at https://www.denzven.tk/Denzven-Graphing-Api/
