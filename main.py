@@ -3,7 +3,7 @@ import flask
 import config
 import matplotlib.pyplot as plt
 import asyncio
-
+import random
 # importing Blueprints
 from api.flat_graph import flat_graph_runner
 from api.beta_flat_graph import beta_flat_graph_runner
@@ -114,13 +114,14 @@ def reset():
         return "done"
 
 
-# When you have a full website you can't leave a chance for a rickroll 🤣
+# When you have a full website you can't *give up* a chance for a rickroll 🤣
 @app.route(config.API_RICKROLL_ROUTE)
 def rickroll():
     """
     Rickroll
     """
-    return flask.redirect("https://youtu.be/dQw4w9WgXcQ")
+    
+    return flask.redirect(random.choice(["https://youtu.be/dQw4w9WgXcQ","https://www.youtube.com/watch?v=HPk-VhRjNI8","https://www.youtube.com/watch?v=Uj1ykZWtPYI","https://www.youtube.com/watch?v=EE-xtCF3T94","https://www.youtube.com/watch?v=ID_L0aGI9bg"])
 
 
 # Main portion for running the flask app using diff hosting services
