@@ -6,11 +6,11 @@
 
 pip install Denzven-Graphing-Api-Wrapper
 
-
+or
 
 pip install DenzGraphingApiWrapper-py
 
-
+or
 
 pip install git+https://github.com/denzven/DenzGraphingApiWrapper_py.git
 
