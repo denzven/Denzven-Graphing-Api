@@ -121,7 +121,7 @@ def rickroll():
     Rickroll
     """
     
-    return flask.redirect(random.choice(["https://youtu.be/dQw4w9WgXcQ","https://www.youtube.com/watch?v=HPk-VhRjNI8","https://www.youtube.com/watch?v=Uj1ykZWtPYI","https://www.youtube.com/watch?v=EE-xtCF3T94","https://www.youtube.com/watch?v=ID_L0aGI9bg"])
+    return flask.redirect(f"https://www.youtube.com/watch?v={random.choice(["dQw4w9WgXcQ","HPk-VhRjNI8","Uj1ykZWtPYI","EE-xtCF3T94","ID_L0aGI9bg"])})
 
 
 # Main portion for running the flask app using diff hosting services
