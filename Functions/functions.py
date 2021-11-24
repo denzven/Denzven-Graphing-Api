@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 import sympy as sp
 import sympy.parsing.sympy_parser as spr
-import discord
+#import discord
 import numpy as np
 import numexpr as ne
 
