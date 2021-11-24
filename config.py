@@ -1,4 +1,4 @@
-import discord
+#import discord
 
 DEFAULT_PLOTSTYLE = "dark_background"
 MAIN_COLOR = "#01abe1"
