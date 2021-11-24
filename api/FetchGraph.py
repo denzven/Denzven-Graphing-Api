@@ -11,34 +11,32 @@ import numexpr as ne
 
 matplotlib.use("agg")
 
-# Adding a blueprint to start the graph function
-flat_graph_runner = flask.Blueprint("flat_graph_runner", __name__)
 
 
 # Using the Blueprint made with a path
-@flat_graph_runner.route(config.FLAT_GRAPH_ROUTE, methods=["GET"])
-def flat_graph():
+
+def FetchGraph(InputArgs):
     """
     Function for Getting Flat_Graphs
     """
     # Getting all the parameters from the url
-    print(flask.request.args)
-    formula_og_input = flask.request.args.get("formula")
-    grid_value = flask.request.args.get("grid")
-    plot_style = flask.request.args.get("plot_style")
-    x_coord = flask.request.args.get("x_coord")
-    y_coord = flask.request.args.get("y_coord")
-    spine_top = flask.request.args.get("spine_top")
-    spine_bottom = flask.request.args.get("spine_bottom")
-    spine_left = flask.request.args.get("spine_left")
-    spine_right = flask.request.args.get("spine_right")
-    line_style = flask.request.args.get("line_style")
-    grid_lines_major = flask.request.args.get("grid_lines_major")
-    grid_lines_minor = flask.request.args.get("grid_lines_minor")
-    tick_colors = flask.request.args.get("tick_colors")
-    axfacecolor = flask.request.args.get("axfacecolor")
-    figfacecolor = flask.request.args.get("figfacecolor")
-    title_text = flask.request.args.get("title_text")
+    print(InputArgs)
+    formula_og_input = InputArgs.get("formula")
+    grid_value = InputArgs.get("grid")
+    plot_style = InputArgs.get("plot_style")
+    x_coord = InputArgs.get("x_coord")
+    y_coord = InputArgs.get("y_coord")
+    spine_top = InputArgs.get("spine_top")
+    spine_bottom = InputArgs.get("spine_bottom")
+    spine_left = InputArgs.get("spine_left")
+    spine_right = InputArgs.get("spine_right")
+    line_style = InputArgs.get("line_style")
+    grid_lines_major = InputArgs.get("grid_lines_major")
+    grid_lines_minor = InputArgs.get("grid_lines_minor")
+    tick_colors = InputArgs.get("tick_colors")
+    axfacecolor = InputArgs.get("axfacecolor")
+    figfacecolor = InputArgs.get("figfacecolor")
+    title_text = InputArgs.get("title_text")
     plot_style_list = [ "Solarize_Light2", "_classic_test_patch", "bmh", 
                         "classic", "dark_background", "fast", "fivethirtyeight", 
                         "ggplot", "grayscale", "seaborn", "seaborn-bright", 

@@ -95,6 +95,7 @@ def form():
 # Submitting the robots.txt and sitemap.xml for SEO
 @app.route("/robots.txt")
 @app.route("/sitemap.xml")
+@app.route("/google1eb3c1362b73ec2f.html")
 def static_from_root():
     """
     Returns the Sitemap and robots.txt for the Website
