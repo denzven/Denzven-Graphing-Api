@@ -1,44 +1,42 @@
-#from modules.module import renderTeX
-#import config
+from modules.module import renderTeX
+import config
 import matplotlib.pyplot as plt
 import sympy as sp
+<<<<<<< HEAD
 import sympy.parsing.sympy_parser as spr
 #import discord
+=======
+import discord
+>>>>>>> parent of ed4011d (Update functions.py)
 import numpy as np
-import numexpr as ne
 
-x = sp.symbols('x')
-y = sp.symbols('y')
+x = sp.symbols("x")
 
 
-def GetExpression(InputFormula):
-    '''
+def GetExpression(formula):
+    """
     Gets the "symified" version of the input str
-    '''
-    if '=' in InputFormula:
-        ExpList = InputFormula.split('=')
-        InputFormula = ExpList[0] + "-" + "(" + ExpList[::-1][0] + ")"
-        print(' Formula Contains =')
+    """
+    formula = formula.replace("y=", "")
+    formula = formula.replace("^", "**")
+    formula = formula.replace("e", "E")
 
-    if 'y' not in InputFormula:
-        print("Formula doesnt contain y")
-        
-    if 'x' not in InputFormula:
-        print("Formula doesnt contain x")
+    transformations = (
+        sp.standard_transformations
+        + (sp.implicit_multiplication_application,)
+        + (sp.convert_xor,)
+    )
+    equation = sp.parse_expr(formula, transformations=transformations)
 
-    if '=0' in InputFormula:
-        print("Formula contains =0 which is not needed lmao")
-
-    InputFormula = InputFormula.replace('√', 'sqrt')
-    InputFormula = InputFormula.replace('^', '**')
-    print(InputFormula)
-
-    transformations = (spr.standard_transformations + (spr.implicit_multiplication_application,) + (spr.convert_xor,))
-    equation = spr.parse_expr((InputFormula) , transformations=transformations)
-
+<<<<<<< HEAD
     print(str(equation))
     return equation
 
+=======
+    return
+
+
+>>>>>>> parent of ed4011d (Update functions.py)
 def RenderLatex(InputLatex):
     """
     a Function that renders Latex
